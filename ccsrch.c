@@ -39,7 +39,7 @@
   #define SIGQUIT 3
 #endif
 
-#define PROG_VER "ccsrch 1.0.9 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n             (c) 2007 Mike Beekey <zaphod2718@yahoo.com>"
+#define PROG_VER "ccsrch 1.0.9 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n             (c) 2007 Mike Beekey <zaphod2718@yahoo.com>\n             (c) 2019 William Ward <wward@givepaycommerce.com>"
 
 #define MDBUFSIZE    512
 #define MAXPATH     2048
@@ -609,6 +609,31 @@ static char *get_filename_ext(const char *filename)
   return dot;
 }
 
+static int starts_with(const char *pre, const char *str)
+{
+    size_t lenpre = strlen(pre),
+           lenstr = strlen(str);
+    return lenstr < lenpre ? 0 : strncmp(pre, str, lenpre) == 0;
+}
+
+static int is_file_linux_system(const char *name) 
+{
+  char *filename = strrchr(name, '/') + 1;
+  if( filename == NULL ) {
+    return 0;
+  }
+
+  if( strcmp( filename, "kcore" ) == 0 ) {
+    return 1;
+  }
+
+  if( strcmp( filename, "swapfile" ) == 0 ){
+    return 1;
+  }
+
+  return 0;
+}
+
 static int is_allowed_file_type(const char *name)
 {
   char  delim[] = ",";
@@ -625,6 +650,10 @@ static int is_allowed_file_type(const char *name)
   fname   = strdup(name);
   if (exclude == NULL || fname == NULL)
     return 0;
+
+  if( is_file_linux_system( fname ) ) {
+    return 1;
+  }
 
   ext     = get_filename_ext(fname);
   stolower(ext);
@@ -680,7 +709,12 @@ static int proc_dir_list(const char *instr)
     /* readdir give us everything and not necessarily in order. This
        logic is just silly, but it works */
     if ((strcmp(direntptr->d_name, ".") == 0) ||
-        (strcmp(direntptr->d_name, "..") == 0))
+        (strcmp(direntptr->d_name, "..") == 0) ||
+        (strcmp(direntptr->d_name, "dev") == 0) ||
+        (strcmp(direntptr->d_name, "overlay2") == 0) ||
+        (strcmp(direntptr->d_name, "sys") == 0) ||
+        (strcmp(direntptr->d_name, "X11") == 0) ||
+        (strcmp(direntptr->d_name, "proc") == 0))
       continue;
 
     snprintf(curr_path+strlen(curr_path), MAXPATH-strlen(curr_path), "%s", direntptr->d_name);

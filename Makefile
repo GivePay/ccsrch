@@ -33,10 +33,10 @@ PROGS	= ccsrch
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
   CFLAGS	=-O2
-  LDFLAGS	=
+  LDFLAGS	=-static
 else
   CFLAGS	=-O2
-  LDFLAGS	=
+  LDFLAGS	=-static
 endif
 
 strict: CFLAGS += -pedantic -Wall -Werror

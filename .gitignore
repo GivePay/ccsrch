@@ -8,3 +8,6 @@ out.txt
 .idea/workspace.xml
 .idea/dictionaries
 .idea/shelf
+/.vscode
+/CMakeFiles
+ccsrch
