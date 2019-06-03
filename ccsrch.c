@@ -20,6 +20,8 @@
  *
  */
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +41,7 @@
   #define SIGQUIT 3
 #endif
 
-#define PROG_VER "ccsrch 1.0.9 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n             (c) 2007 Mike Beekey <zaphod2718@yahoo.com>\n             (c) 2019 William Ward <wward@givepaycommerce.com>"
+#define PROG_VER "ccsrch 1.10.0 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n             (c) 2007 Mike Beekey <zaphod2718@yahoo.com>\n             (c) 2019 William Ward <wward@givepaycommerce.com>"
 
 #define MDBUFSIZE    512
 #define MAXPATH     2048
@@ -638,20 +640,38 @@ static int is_file_linux_system(const char *name)
   return 0;
 }
 
+static char* stradd( char* curr, char add )
+{
+  size_t curr_size = strlen( curr );
+  char *new_string;
+  int result = asprintf( &new_string, "%s%c", curr, add );
+  if( result == -1 ){
+    return NULL;
+  }
+
+  return new_string;
+}
+
 static int is_allowed_file_type(const char *name)
 {
-  char  delim[] = ",";
-  char *exclude = NULL;
-  char *fname   = NULL;
-  char *result  = NULL;
-  char *ext     = NULL;
-  int   ret     = 0;
+  char  delim[]   = ",";
+  char *exclude   = NULL;
+  char *fname     = NULL;
+  char *lcfname   = NULL;
+  char *result    = NULL;
+  char *ext       = NULL;
+  char *embed_ext = NULL;
+  int   ret       = 0;
 
   if (exclude_extensions == NULL)
     return 0;
 
   exclude = strdup(exclude_extensions);
   fname   = strdup(name);
+
+  lcfname = strdup(fname);
+  stolower(lcfname);
+
   if (exclude == NULL || fname == NULL)
     return 0;
 
@@ -664,16 +684,26 @@ static int is_allowed_file_type(const char *name)
   if (ext != NULL && ext[0] != '\0') {
     result = strtok(exclude, delim);
     while (result != NULL) {
-      if (strcmp(result, ext) == 0) {
+
+      embed_ext = stradd( result, '.' );
+      embed_ext = stolower( embed_ext );
+
+      if( strstr( lcfname, embed_ext ) != NULL ){
         ret = 1;
         break;
-      } else {
-        result = strtok(NULL, delim);
       }
+
+      if( strcmp( result, ext ) == 0 ){
+        ret = 1;
+        break;
+      }
+      
+      result = strtok( NULL, delim );
     }
   }
-  free(exclude);
-  free(fname);
+  free( exclude );
+  free( fname );
+  free( embed_ext );
   return ret;
 }
 

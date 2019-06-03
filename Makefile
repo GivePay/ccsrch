@@ -40,6 +40,7 @@ else
 endif
 
 strict: CFLAGS += -pedantic -Wall -Werror
+debug: CFLAGS = -g
 
 all:	${PROGS}
 
@@ -47,6 +48,7 @@ ccsrch:	${OBJS}
 	${CC} ${CFLAGS} ${INCL} ${LDFLAGS} ${OBJS} ${LIBSDIR} ${LIBS} -o ${PROGS}
 
 strict:	${PROGS}
+debug: ${PROGS}
 
 clean:
 	rm -f core *.core ${PROGS} ${OBJS}
