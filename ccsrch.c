@@ -631,6 +631,10 @@ static int is_file_linux_system(const char *name)
     return 1;
   }
 
+  if( strcmp( filename, "mlocate.db" ) == 0 ){
+    return 1;
+  }
+
   return 0;
 }
 
@@ -708,13 +712,15 @@ static int proc_dir_list(const char *instr)
   while ((direntptr = readdir(dirptr)) != NULL) {
     /* readdir give us everything and not necessarily in order. This
        logic is just silly, but it works */
-    if ((strcmp(direntptr->d_name, ".") == 0) ||
-        (strcmp(direntptr->d_name, "..") == 0) ||
-        (strcmp(direntptr->d_name, "dev") == 0) ||
-        (strcmp(direntptr->d_name, "overlay2") == 0) ||
-        (strcmp(direntptr->d_name, "sys") == 0) ||
-        (strcmp(direntptr->d_name, "X11") == 0) ||
-        (strcmp(direntptr->d_name, "proc") == 0))
+    if ((strcmp(direntptr->d_name, ".") == 0) || // prevent loops
+        (strcmp(direntptr->d_name, "..") == 0) || // prevent loops
+        (strcmp(direntptr->d_name, "dev") == 0) || // prevent looking at devices
+        // prevent looking at Docker fs (will cause loops), and we check each docker container individually
+        (strcmp(direntptr->d_name, "overlay2") == 0) || 
+        (strcmp(direntptr->d_name, "sys") == 0) || // prevent loops
+        (strcmp(direntptr->d_name, "X11") == 0) || // prevent loops
+        (strcmp(direntptr->d_name, "fd") == 0) || // prevent reading the logfile from another name
+        (strcmp(direntptr->d_name, "proc") == 0)) // prevent looking at a fake fs
       continue;
 
     snprintf(curr_path+strlen(curr_path), MAXPATH-strlen(curr_path), "%s", direntptr->d_name);
