@@ -611,13 +611,6 @@ static char *get_filename_ext(const char *filename)
   return dot;
 }
 
-static int starts_with(const char *pre, const char *str)
-{
-    size_t lenpre = strlen(pre),
-           lenstr = strlen(str);
-    return lenstr < lenpre ? 0 : strncmp(pre, str, lenpre) == 0;
-}
-
 static int is_file_linux_system(const char *name) 
 {
   char *filename = strrchr(name, '/') + 1;
@@ -642,7 +635,6 @@ static int is_file_linux_system(const char *name)
 
 static char* stradd( char* curr, char add )
 {
-  size_t curr_size = strlen( curr );
   char *new_string;
   int result = asprintf( &new_string, "%s%c", curr, add );
   if( result == -1 ){
