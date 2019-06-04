@@ -1,8 +1,12 @@
 # CCSRCH
 
-[![Build Status](https://travis-ci.org/adamcaudill/ccsrch.svg?branch=master)](https://travis-ci.org/adamcaudill/ccsrch)
+[![Build Status](https://travis-ci.org/givepay/ccsrch.svg?branch=master)](https://travis-ci.org/givepay/ccsrch)
 
 CCSRCH is a cross-platform tool for searching filesystems for credit card information.
+
+### GivePay Note
+
+This project has been slightly modified to ignore some problematic Linux/Docker directories as well as searching the entire filename for the file extension---the utility previously only searched the last extension component.
 
 ### Copyright
 
