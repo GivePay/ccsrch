@@ -742,6 +742,7 @@ static int proc_dir_list(const char *instr)
         (strcmp(direntptr->d_name, "sys") == 0) || // prevent loops
         (strcmp(direntptr->d_name, "X11") == 0) || // prevent loops
         (strcmp(direntptr->d_name, "fd") == 0) || // prevent reading the logfile from another name
+        (strcmp(direntptr->d_name, "sda1") == 0) || // a particular docker container has a dir. loop
         (strcmp(direntptr->d_name, "proc") == 0)) // prevent looking at a fake fs
       continue;
 
