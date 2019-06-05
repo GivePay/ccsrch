@@ -1,0 +1,7 @@
+/etc/alternatives/ghostscript-current/lib/ht_ccsto.ps	MASTERCARD	2286******085033
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2014.json	VISA	4728******289879
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2014.json	MASTERCARD	5353******816469
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2015.json	VISA	4054******566099
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2015.json	DINERS_CLUB_CARTE_BLANCHE	3007****545313
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2015.json	AMEX	3713*****819669
+/home/wward/.cache/composer/repo/https---repo.packagist.org/p-provider-2015.json	MASTERCARD	2258******308648

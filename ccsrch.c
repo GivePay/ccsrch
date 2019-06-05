@@ -41,7 +41,7 @@
   #define SIGQUIT 3
 #endif
 
-#define PROG_VER "ccsrch 1.10.0 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n             (c) 2007 Mike Beekey <zaphod2718@yahoo.com>\n             (c) 2019 William Ward <wward@givepaycommerce.com>"
+#define PROG_VER "ccsrch 1.10.1 (c) 2012-2016 Adam Caudill <adam@adamcaudill.com>\n              (c) 2007 Mike Beekey <zaphod2718@yahoo.com>\n              (c) 2019 William Ward <wward@givepaycommerce.com>"
 
 #define MDBUFSIZE    512
 #define MAXPATH     2048
@@ -82,6 +82,13 @@ static int    mask_card_number     = 0;
 static int    limit_ascii          = 0;
 static int    ignore_count         = 0;
 static int    wrap                 = 0;
+
+void sigusr1_handler(int sig) 
+{
+  if( sig == SIGUSR1 ){
+    printf("Current file: %s\n", currfilename);
+  }
+}
 
 static void initialize_buffer()
 {
@@ -993,6 +1000,11 @@ int main(int argc, char *argv[])
   } else {
   	newstatus = 0;
   	print_file_hit_count = 0;
+  }
+
+  /* Bind SIGUSR1 to output status information */
+  if( signal( SIGUSR1, sigusr1_handler ) == SIG_ERR ){
+    printf("Process will not output information on SIGUSR1/SIGINFO\n");
   }
 
   init_time = time(NULL);
